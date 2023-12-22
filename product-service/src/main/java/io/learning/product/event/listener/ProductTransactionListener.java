@@ -29,7 +29,7 @@ public class ProductTransactionListener implements TransactionListener<ProductTr
     @Override
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleEvent(ProductTransactionEvent event) throws ProductProcessingException {
-        log.debug("Handling event before commit: {}", event);
+        log.info("Handling event before commit: {}", event);
         eventBus.sendEvent(event);
 
         DistributedTransaction transaction = null;

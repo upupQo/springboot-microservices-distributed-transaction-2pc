@@ -38,7 +38,7 @@ public class AccountTransactionListener implements TransactionListener<AccountTr
     @Override
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleEvent(AccountTransactionEvent event) throws AccountProcessingException {
-        log.debug("Handling event before commit: {}", event);
+        log.info("Handling event before commit: {}", event);
         eventBus.sendEvent(event);
 
         DistributedTransaction transaction = null;
