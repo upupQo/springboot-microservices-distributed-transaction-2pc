@@ -23,7 +23,7 @@ public class DistributedTransactionEventListener {
             @QueueBinding(value = @Queue("txn-events-account"), exchange = @Exchange(type = ExchangeTypes.TOPIC, name = "txn-events"))
     })
     public void onMessage(DistributedTransaction transaction) {
-        debug.info("Transaction message received: {}", transaction);
+        log.info("Transaction message received: {}", transaction);
         eventBus.sendTransaction(transaction);
     }
 
