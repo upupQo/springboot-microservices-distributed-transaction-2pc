@@ -40,7 +40,7 @@ public class OrderService {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
-    
+
     public Optional<Order> getOrderById(Long orderId) {
         return orderRepository.findById(orderId);
     }
@@ -49,6 +49,7 @@ public class OrderService {
     public Order createOrder(Order order) {
         DistributedTransaction transaction = restTemplate.postForObject("http://transaction-server/transactions", new DistributedTransaction(), DistributedTransaction.class);
         log.info("Trasaction created: {}", transaction);
+        log.info("Create Order: {}", order);
         Order savedOrder = orderRepository.save(order);
         Product product = updateProduct(transaction.getId(), savedOrder);
         log.info("Product updated: {}", product);
@@ -86,7 +87,7 @@ public class OrderService {
         HttpEntity<Void> requestEntity = new HttpEntity<>(prepareHeaders(transactionId));
         return restTemplate.exchange("http://account-service/accounts/{id}/withdrawl/{amount}", HttpMethod.PUT, requestEntity, Account.class, accountId, amount).getBody();
     }
-    
+
     protected void addTransactionParticipant(String transactionId, String serviceId, DistributedTransactionStatus status) {
         HttpEntity<DistributedTransactionParticipant> requestEntity = new HttpEntity<>(new DistributedTransactionParticipant(serviceId, status));
         restTemplate.exchange("http://transaction-server/transactions/{id}/participants", HttpMethod.PUT, requestEntity, Object.class, transactionId);
